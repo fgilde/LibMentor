@@ -2,18 +2,56 @@
 
 Checked on 2026-11-11.
 
-The public [fgilde/LibMentor](https://github.com/fgilde/LibMentor) repository contains the CLI, tests, workflows, JSON schemas and all six integration change sets. NuGet accepted the first 0.1.0 upload through Trusted Publishing. Public feed availability and production documentation deployment are still pending.
+LibMentor 0.1.0 is publicly available on NuGet. All six consumer integrations have been merged into their default branches, and generation plus output-drift checks pass against the public package in every repository. Four consumer documentation sites are publicly verified; two hosting issues remain.
 
-## Verified on GitHub Actions
+## Package and verification
 
-- [First NuGet release](https://github.com/fgilde/LibMentor/actions/runs/43030959690): tests, packaging, installation, OIDC login and upload succeeded. NuGet returned HTTP 201 Created for LibMentor 0.1.0. At this checkpoint, its public version index still returns HTTP 404; consumer restores therefore remain pending validation/indexing.
+- [Public package](https://www.nuget.org/packages/LibMentor/0.1.0): published with the existing NuGet Trusted Publishing policy.
+- [Public-package verification](https://github.com/fgilde/LibMentor/actions/runs/43038213157): installs 0.1.0 from NuGet into a fresh tool directory and successfully runs init, generation and the output-drift check.
+- [Windows and Linux CI](https://github.com/fgilde/LibMentor/actions/runs/43040687438): both jobs passed, including 32 tests per platform, formatting, online dependency auditing, packaging, installation and CLI smoke tests.
+- [Six-library matrix](https://github.com/fgilde/LibMentor/actions/runs/43040687600): all six configurations passed generation and output-drift verification with the package built by the workflow. AirWorks first exports real TypeDoc reflection JSON.
+- [Next-package branding](https://github.com/fgilde/LibMentor/commit/7eb7140a2c069e4fbe52dd51a7c9e089b3cce570): embeds assets/icon.png as icon.png and sets PackageProjectUrl to https://libmentor.gilde.org/. The source repository remains https://github.com/fgilde/LibMentor. The actual CI-produced nupkg was opened and both URLs, the icon entry and the icon checksum were verified. The PNG is 128 x 128 pixels and 20,041 bytes. These metadata changes are prepared for the next package version; published 0.1.0 is unchanged.
+- Commits and merge commits created for this implementation have no Co-Authored-By trailer.
 
-- [Windows and Linux CI](https://github.com/fgilde/LibMentor/actions/runs/43024680859): both jobs succeeded, with 32 passing tests per platform, whitespace checks, normal online package auditing, packaging, installation of the actual tool and CLI smoke tests.
-- [Six-library integration matrix](https://github.com/fgilde/LibMentor/actions/runs/43024681065): all six jobs succeeded using the CLI package built by that workflow. Each job generated documentation and then verified output drift without writing.
-- AirWorks generated real TypeDoc reflection JSON from its TypeScript entry point before running LibMentor.
-- The documentation workflow builds successfully. Its deployment step currently returns HTTP 404 because GitHub Pages is not enabled for this repository.
-- AngleSharp was updated to 1.5.0 after the online audit identified an advisory affecting 1.3.0. Vulnerability auditing remains enabled.
-- Checkout line endings are enforced through .gitattributes, and the PowerShell smoke test resets its expected failure exit code after successful assertions.
+## Default-branch integrations
+
+| Repository | Default branch | Merged pull request | Public-package validation |
+| --- | --- | --- | --- |
+| Nextended | main | [#29](https://github.com/fgilde/Nextended/pull/29) | [Passed](https://github.com/fgilde/Nextended/actions/runs/43042485065) |
+| CoworkeeLib | main | [#2](https://github.com/fgilde/CoworkeeLib/pull/2) | [Passed](https://github.com/fgilde/CoworkeeLib/actions/runs/43040419385) |
+| AirWorks | main | [#1](https://github.com/fgilde/AirWorks/pull/1) | [Passed](https://github.com/fgilde/AirWorks/actions/runs/43040440924) |
+| MudBlazor.Extensions | main | [#214](https://github.com/fgilde/MudBlazor.Extensions/pull/214) | [Passed](https://github.com/fgilde/MudBlazor.Extensions/actions/runs/43040464715) |
+| BlazorJS | master | [#1](https://github.com/fgilde/BlazorJS/pull/1) | [Passed](https://github.com/fgilde/BlazorJS/actions/runs/43040484656) |
+| Playzor | main | [#1](https://github.com/fgilde/Playzor/pull/1) | [Passed](https://github.com/fgilde/Playzor/actions/runs/43040508983) |
+
+Each repository contains libmentor.json, a local tool manifest pinned to LibMentor 0.1.0, a reusable generation action and a workflow for pull requests and default-branch pushes. The action restores the public package, resolves the consumer's existing version metadata, generates a source snapshot identified by the commit SHA, and runs generate --check. Generated files are retained as workflow artifacts and included under ai/ in documentation deployments.
+
+Outputs include llms.txt, llms-full.txt, knowledge.json, api.md, AGENTS.md, self-contained agent skills, version snapshots and an ownership manifest. Generated output is intentionally excluded from source control and rebuilt in CI.
+
+## Public hosting
+
+The following URLs were checked directly. All five common files (llms.txt, llms-full.txt, knowledge.json, api.md and AGENTS.md) return HTTP 200 at each verified site.
+
+| Repository | llms.txt | Current result |
+| --- | --- | --- |
+| Nextended | [Open](https://fgilde.github.io/Nextended/ai/llms.txt) | HTTP 200 |
+| CoworkeeLib | [Open](https://framework.coworkee.de/ai/llms.txt) | HTTP 200 |
+| AirWorks | [Open](https://fgilde.github.io/AirWorks/ai/llms.txt) | HTTP 200 |
+| MudBlazor.Extensions | [Open](https://fgilde.github.io/MudBlazor.Extensions/ai/llms.txt) | HTTP 200 |
+| BlazorJS | [Configured URL](https://fgilde.github.io/BlazorJS/ai/llms.txt) | HTTP 404 despite a successful Pages deployment |
+| Playzor | [Configured URL](https://fgilde.github.io/Playzor/ai/llms.txt) | HTTP 404; Pages deployment rejected because Pages is not enabled |
+
+[BlazorJS deployment](https://github.com/fgilde/BlazorJS/actions/runs/43040484879) reports success, but the public AI-documentation URLs still return 404. Public availability has not been marked complete.
+
+[Playzor deployment](https://github.com/fgilde/Playzor/actions/runs/43040509072) successfully builds and uploads the site artifact, then fails when creating the Pages deployment. GitHub reports that Pages must be enabled in [repository settings](https://github.com/fgilde/Playzor/settings/pages).
+
+[LibMentor's own documentation workflow](https://github.com/fgilde/LibMentor/actions/runs/43040687433) also builds successfully and fails at Pages deployment while Pages is disabled. The separate project website at https://libmentor.gilde.org/ is reachable.
+
+The existing [MudBlazor.Extensions preview and test-app workflow](https://github.com/fgilde/MudBlazor.Extensions/actions/runs/43040464664) published its preview NuGet package successfully, then failed in its Azure App Service deployment with HTTP 403 (Site Disabled). Its LibMentor validation, documentation deployment and TryMudEx deployment passed.
+
+## Integration matrix snapshot
+
+These counts refer to the reproducible consumer revisions pinned in .github/workflows/integrations.yml.
 
 | Library | Documents | API entries | Generated files |
 | --- | ---: | ---: | ---: |
@@ -24,50 +62,27 @@ The public [fgilde/LibMentor](https://github.com/fgilde/LibMentor) repository co
 | AirWorks | 2 | 742 | 23 |
 | Coworkee | 138 | 9,204 | 295 |
 
-The integration workflow retains the built package and generated documentation as named artifacts. Its pinned consumer revisions are recorded directly in .github/workflows/integrations.yml.
-
-## Implemented
+## Implemented behavior
 
 Core/Application/Infrastructure/CLI dependency boundaries separate the model and use case from parsers, files and processes. Markdown uses Markdig, HTML uses AngleSharp, C# declarations use Roslyn, compiler XML uses the platform XML parser, and TypeDoc reflection JSON uses System.Text.Json.
 
-Outputs include llms.txt, llms-full.txt, API Markdown, schema-versioned portable knowledge, AGENTS.md, self-contained skills, version snapshots and an ownership manifest. Generation is deterministic across LF/CRLF inputs and preserves unrelated output files. Validation covers local Markdown targets, explicit API references, configured compilable example projects, declaration baselines, contained paths and output drift.
+Generation is deterministic across LF/CRLF inputs and preserves unrelated output files. Validation covers local Markdown targets, explicit API references, configured compilable example projects, declaration baselines, contained paths and output drift. AngleSharp 1.5.0 addresses the advisory found during the online audit; auditing remains enabled.
 
-CI/CD includes cross-platform tests, real package smoke tests, six-library integration tests, Pages deployment, tag-triggered and manually requested OIDC NuGet publishing, and optional Context7 registration. The release workflow validates its requested package version before testing and publishing.
-
-## Integration pull requests
-
-| Repository | Pull request | State |
-| --- | --- | --- |
-| Nextended | [#29](https://github.com/fgilde/Nextended/pull/29) | Draft; awaiting first NuGet release |
-| CoworkeeLib | [#2](https://github.com/fgilde/CoworkeeLib/pull/2) | Draft; awaiting first NuGet release |
-| AirWorks | [#1](https://github.com/fgilde/AirWorks/pull/1) | Draft; awaiting first NuGet release |
-| MudBlazor.Extensions | [#214](https://github.com/fgilde/MudBlazor.Extensions/pull/214) | Draft; awaiting first NuGet release |
-| BlazorJS | [#1](https://github.com/fgilde/BlazorJS/pull/1) | Draft; awaiting first NuGet release |
-| Playzor | [#1](https://github.com/fgilde/Playzor/pull/1) | Draft; awaiting first NuGet release |
-
-Each existing documentation deployment includes generated files under ai/. BlazorJS and Playzor have dedicated documentation deployment workflows. The consumers pin LibMentor 0.1.0; their own restore steps require its first NuGet publication. They remain drafts until the accepted package becomes publicly available and those workflows can be verified against NuGet itself. The first retry still failed at restore while version 0.1.0 was absent from the public feed.
-
-The main integration matrix already verifies the exact configurations against the built package, independently of public NuGet availability. All published commits have no Co-Authored-By trailer.
+CI/CD covers cross-platform checks, real package installation, the six-library matrix, documentation deployment and OIDC NuGet publication. Version changes on main, matching tags and validated manual runs use release.yml. See [release setup](releasing.md).
 
 ## Remaining rollout
 
-The existing NuGet Trusted Publishing policy was verified by the successful OIDC exchange; account setup for that release is complete.
-
-1. Wait for public NuGet validation/indexing of 0.1.0. If validation reports an error, inspect the package in the owner's Manage packages view.
-2. Rerun consumer validation against NuGet itself, complete the pull requests and verify their deployed AI-documentation URLs.
-3. Enable GitHub Pages with GitHub Actions as the source where required. The LibMentor documentation build succeeds, but its deployment still returns HTTP 404 until Pages is enabled.
-4. Optionally supply a Context7 API key and register the public llms.txt URLs after deployment.
-
-Future version changes on main, matching version tags and validated manual runs all use release.yml. See [release setup](releasing.md) for the exact commands and policy values.
+1. Resolve BlazorJS public Pages availability and enable Pages with GitHub Actions as the source for Playzor and LibMentor.
+2. Recheck the affected public URLs after their deployments succeed.
+3. Optionally configure a Context7 API key and register the public llms.txt URLs. No Context7 registration or automatic search/LLM indexing has been claimed.
+4. Publish the next package version when desired to make the prepared icon and project-website metadata visible on NuGet.
 
 ## Local checkout and history
 
-The original checkout exists at C:\dev\privat\github\LibMentor and retains its two original commits. Source files were read from that checkout and published through GitHub. Further CI corrections are currently in the remote repository; the local checkout has not been reset or overwritten.
-
-The remote was initialized through GitHub's contents API, so its history is currently separate from those two local commits. Importing the original Git bundle was blocked by an automatic approval review because Git histories may contain sensitive historical content. That import has not happened and requires explicit approval. No automatic formatting or history-import workflow was enabled.
+The original checkout is at C:\dev\privat\github\LibMentor and retains its two original commits. The canonical remote was initialized separately. Subsequent CI corrections, package metadata and integration results are in the remote repository; the original local checkout has not been reset, overwritten or synchronized. No history-import workflow was enabled.
 
 ## Deliberate limits
 
-C# source extraction is declaration analysis rather than a complete MSBuild semantic compilation or binary compatibility proof. Compiled Razor APIs can be supplied as compiler XML. TypeDoc imports are evidence-bearing API references rather than a full TypeScript compatibility checker. Remote URLs and heading anchors are not checked, and Markdown fences are not executed as tests.
+C# extraction analyzes source declarations rather than a complete MSBuild semantic compilation or binary compatibility proof. Compiled Razor APIs can be supplied as compiler XML. TypeDoc imports provide API evidence rather than a full TypeScript compatibility checker. Remote URLs and heading anchors are not checked, and Markdown fences are not executed as tests.
 
 Earlier version snapshots require retention across clean hosting deployments. No new MCP service, database, LLM-generated documentation or discoverability/ranking guarantee is included.
