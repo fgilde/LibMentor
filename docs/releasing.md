@@ -26,7 +26,9 @@ Allow the first package publication as well as new versions. Confirm that the pa
 
 1. Change the version in `Directory.Build.props` and `libmentor.json`.
 2. Run the CI checks locally or through a pull request.
-3. Push a matching `v<version>` tag. `v0.1.0` publishes package `LibMentor` version `0.1.0`.
+3. Merge the version change into `main`. Changes to `Directory.Build.props` automatically start the Release workflow. Updates to the release workflow itself also run the publication checks.
+
+Matching `v<version>` tags remain supported: `v0.1.0` publishes package `LibMentor` version `0.1.0`. All release runs are serialized, and existing NuGet versions are skipped rather than replaced.
 
 For the first release, the same workflow can also be started from Actions > Release > Run workflow, with `version` set to `0.1.0`, or remotely:
 
@@ -36,7 +38,7 @@ gh workflow run release.yml --repo fgilde/LibMentor --ref main --field version=0
 
 Configure the NuGet Trusted Publishing policy before starting the release. Manual runs validate the requested version against the project version.
 
-The release workflow validates the tag against the project version, runs tests, packs and installs the actual package, exercises the CLI, then exchanges OIDC credentials and publishes. Do not tag again to replace a package; NuGet versions are immutable.
+The release workflow validates tag or manual versions when provided, allows automatic publication only from main, runs tests, packs and installs the actual package, exercises the CLI, then exchanges OIDC credentials and publishes. Do not tag again to replace a package; NuGet versions are immutable.
 
 The normal CI workflow tests Windows and Linux, checks formatting, packs and smoke-tests the actual tool. Documentation deployment uses the CLI from the same source checkout.
 
