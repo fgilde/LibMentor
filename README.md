@@ -7,17 +7,17 @@ LibMentor is a .NET 10 CLI tool. It produces `llms.txt`, `llms-full.txt`, API Ma
 ## Quick start
 
 ```sh
-dotnet tool install --global LibMentor --version 0.1.0
+dotnet tool install --global LibMentor
 libmentor init
 libmentor generate
 libmentor generate --check
 ```
 
-Until the first public release, build and install from source:
+To build and install from source:
 
 ```sh
 dotnet pack src/LibMentor.Cli -c Release -o artifacts
-dotnet tool install LibMentor --tool-path artifacts/tool --add-source artifacts --version 0.1.0
+dotnet tool install LibMentor --tool-path artifacts/tool --add-source artifacts
 ```
 
 Edit `libmentor.json` before generating. All input and output paths are relative to this file, independently of the working directory.
@@ -92,10 +92,10 @@ dotnet pack src/LibMentor.Cli -c Release -o artifacts
 dotnet run --project src/LibMentor.Cli -- generate
 ```
 
-CI validates Windows and Linux and runs the built package against all six library integration configurations, including the real AirWorks TypeDoc export.
+CI validates Windows and Linux, installs the actual built package, generates LibMentor's own documentation, checks output drift and assembles the documentation website. Tests use isolated, generic fixtures; consumers keep their configuration and deployment workflows in their own repositories.
 
 Architecture: Core contains versioned records, Application coordinates extraction/validation/export, Infrastructure implements file/parser/process adapters, and Cli owns arguments and exit codes. New exporters implement `IKnowledgeExporter`; duplicate output paths fail explicitly. Dependencies point inward.
 
-See [research](docs/research.md), [release setup](docs/releasing.md), [integration overview](docs/integrations.md), and [implementation status](docs/implementation-status.md).
+See the [project page](https://fgilde.github.io/LibMentor/), [CI integration guide](docs/integrations.md), [research](docs/research.md), [release setup](docs/releasing.md) and [changelog](CHANGELOG.md).
 
 MIT licensed. Maintained by Florian Gilde.

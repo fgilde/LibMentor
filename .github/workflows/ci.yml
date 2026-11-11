@@ -23,10 +23,18 @@ jobs:
       - name: Install and test packed tool
         shell: pwsh
         run: ./scripts/smoke-test.ps1
+      - name: Generate LibMentor documentation
+        run: dotnet run --project src/LibMentor.Cli -c Release --no-build -- generate --revision "${{ github.sha }}"
+      - name: Verify documentation output
+        run: dotnet run --project src/LibMentor.Cli -c Release --no-build -- generate --check --revision "${{ github.sha }}"
+      - name: Assemble documentation website
+        shell: pwsh
+        run: ./scripts/build-site.ps1
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: results-${{ matrix.os }}
           path: |
             artifacts/*.nupkg
+            artifacts/site
             **/TestResults/*.trx

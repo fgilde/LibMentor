@@ -16,10 +16,16 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - run: dotnet run --project src/LibMentor.Cli -c Release -- generate
+      - name: Generate LibMentor documentation
+        run: dotnet run --project src/LibMentor.Cli -c Release -- generate --revision "${{ github.sha }}"
+      - name: Verify documentation output
+        run: dotnet run --project src/LibMentor.Cli -c Release --no-build -- generate --check --revision "${{ github.sha }}"
+      - name: Assemble documentation website
+        shell: pwsh
+        run: ./scripts/build-site.ps1
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .libmentor
+          path: artifacts/site
   deploy:
     needs: build
     runs-on: ubuntu-latest

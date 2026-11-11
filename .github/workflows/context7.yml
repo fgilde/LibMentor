@@ -12,8 +12,8 @@ jobs:
           CONTEXT7_API_KEY: ${{ secrets.CONTEXT7_API_KEY }}
         run: |
           test -n "$CONTEXT7_API_KEY"
-          curl --fail --silent --show-error https://fgilde.github.io/LibMentor/llms.txt --output /dev/null
+          curl --fail --silent --show-error https://fgilde.github.io/LibMentor/ai/llms.txt --output /dev/null
           curl --fail --silent --show-error https://context7.com/api/v2/add/llmstxt \
             --header "Authorization: Bearer $CONTEXT7_API_KEY" \
             --header 'Content-Type: application/json' \
-            --data '{"llmstxtUrl":"https://fgilde.github.io/LibMentor/llms.txt"}'
+            --data '{"llmstxtUrl":"https://fgilde.github.io/LibMentor/ai/llms.txt"}'

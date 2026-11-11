@@ -5,12 +5,24 @@
   "version": "0.1.0",
   "repository": "https://github.com/fgilde/LibMentor",
   "revision": "main",
-  "baseUrl": "https://fgilde.github.io/LibMentor",
+  "baseUrl": "https://fgilde.github.io/LibMentor/ai",
   "output": ".libmentor",
-  "documents": ["README.md", "docs/**/*.md"],
-  "sources": ["src/**/*.cs"],
+  "documents": [
+    "README.md",
+    "CHANGELOG.md",
+    "docs/**/*.md"
+  ],
+  "sources": [
+    "src/**/*.cs"
+  ],
   "exclude": [],
-  "examples": ["examples/ExampleLibrary/ExampleLibrary.csproj"],
-  "packages": ["LibMentor"],
-  "guidance": ["Keep extraction evidence and source provenance when adding exporters."]
+  "examples": [
+    "examples/ExampleLibrary/ExampleLibrary.csproj"
+  ],
+  "packages": [
+    "LibMentor"
+  ],
+  "guidance": [
+    "Keep extraction evidence and source provenance when adding exporters."
+  ]
 }

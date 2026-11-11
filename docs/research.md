@@ -8,7 +8,7 @@ Reviewed on 2026-11-11 before implementation.
 | [DocFX](https://dotnet.github.io/docfx/docs/dotnet-api-docs.html) | Project/assembly-based API documentation with compiler metadata | Keep it as a complementary website/metadata tool; use Roslyn for lightweight declaration extraction and accept compiler XML |
 | [Roslyn](https://github.com/dotnet/roslyn) | C# parser and symbol/documentation APIs | Reuse official parser rather than regular-expression C# parsing |
 | [Markdig](https://github.com/xoofx/markdig) | Markdown AST and source locations | Reuse for Markdown links and headings |
-| [AngleSharp](https://github.com/AngleSharp/AngleSharp) | HTML parsing | Reuse for HTML-based documentation such as AirWorks |
+| [AngleSharp](https://github.com/AngleSharp/AngleSharp) | HTML parsing | Reuse for HTML-based documentation |
 | [TypeDoc](https://typedoc.org/documents/Overview.html) | TypeScript documentation reflection JSON | Accept reflection JSON rather than building a TypeScript parser |
 | [llms.txt](https://llmstxt.org/) | Proposed documentation index convention | Emit index and full text; do not imply universal agent adoption |
 | [Agent Skills](https://agentskills.io/specification) | Portable skill folder with YAML-frontmatter SKILL.md | Emit self-contained skills and references |
