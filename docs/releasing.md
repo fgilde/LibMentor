@@ -2,7 +2,13 @@
 
 ## One-time setup
 
-Create the public `fgilde/LibMentor` repository and push `main`. Enable GitHub Pages with GitHub Actions as its source.
+The public [fgilde/LibMentor](https://github.com/fgilde/LibMentor) repository is available. Enable GitHub Pages with GitHub Actions as its source:
+
+```powershell
+gh api --method POST repos/fgilde/LibMentor/pages -f build_type=workflow
+```
+
+If Pages is already configured, use the repository's Settings > Pages page to select GitHub Actions instead of creating a second site.
 
 In the `fgilde` NuGet account, create a Trusted Publishing policy:
 
@@ -21,6 +27,14 @@ Allow the first package publication as well as new versions. Confirm that the pa
 1. Change the version in `Directory.Build.props` and `libmentor.json`.
 2. Run the CI checks locally or through a pull request.
 3. Push a matching `v<version>` tag. `v0.1.0` publishes package `LibMentor` version `0.1.0`.
+
+For the first release, the same workflow can also be started from Actions > Release > Run workflow, with `version` set to `0.1.0`, or remotely:
+
+```powershell
+gh workflow run release.yml --repo fgilde/LibMentor --ref main --field version=0.1.0
+```
+
+Configure the NuGet Trusted Publishing policy before starting the release. Manual runs validate the requested version against the project version.
 
 The release workflow validates the tag against the project version, runs tests, packs and installs the actual package, exercises the CLI, then exchanges OIDC credentials and publishes. Do not tag again to replace a package; NuGet versions are immutable.
 
