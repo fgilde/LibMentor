@@ -92,6 +92,8 @@ dotnet pack src/LibMentor.Cli -c Release -o artifacts
 dotnet run --project src/LibMentor.Cli -- generate
 ```
 
+CI validates Windows and Linux and runs the built package against all six library integration configurations, including the real AirWorks TypeDoc export.
+
 Architecture: Core contains versioned records, Application coordinates extraction/validation/export, Infrastructure implements file/parser/process adapters, and Cli owns arguments and exit codes. New exporters implement `IKnowledgeExporter`; duplicate output paths fail explicitly. Dependencies point inward.
 
 See [research](docs/research.md), [release setup](docs/releasing.md), [integration overview](docs/integrations.md), and [implementation status](docs/implementation-status.md).
