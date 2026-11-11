@@ -19,9 +19,9 @@ public sealed class BuildDocumentation(IKnowledgeExtractor extractor, IKnowledge
 
         var files = new SortedDictionary<string, string>(StringComparer.Ordinal);
         foreach (var exporter in exporters)
-        foreach (var file in exporter.Export(knowledge, configuration))
-            if (!files.TryAdd(file.Key, file.Value.Replace("\r\n", "\n", StringComparison.Ordinal)))
-                throw new InvalidOperationException($"Exporters produced the same path: {file.Key}");
+            foreach (var file in exporter.Export(knowledge, configuration))
+                if (!files.TryAdd(file.Key, file.Value.Replace("\r\n", "\n", StringComparison.Ordinal)))
+                    throw new InvalidOperationException($"Exporters produced the same path: {file.Key}");
         return new(knowledge, files);
     }
 }

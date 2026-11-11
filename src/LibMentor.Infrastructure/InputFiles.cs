@@ -27,14 +27,14 @@ internal static class InputFiles
         var pending = new Stack<string>();
         pending.Push(root);
         while (pending.TryPop(out var directory))
-        foreach (var entry in new DirectoryInfo(directory).EnumerateFileSystemInfos())
-        {
-            if ((entry.Attributes & FileAttributes.ReparsePoint) != 0)
-                continue;
-            if ((entry.Attributes & FileAttributes.Directory) == 0)
-                yield return entry.FullName;
-            else if (!ignored.Contains(entry.Name) && !entry.FullName.Equals(generated, StringComparison.OrdinalIgnoreCase))
-                pending.Push(entry.FullName);
-        }
+            foreach (var entry in new DirectoryInfo(directory).EnumerateFileSystemInfos())
+            {
+                if ((entry.Attributes & FileAttributes.ReparsePoint) != 0)
+                    continue;
+                if ((entry.Attributes & FileAttributes.Directory) == 0)
+                    yield return entry.FullName;
+                else if (!ignored.Contains(entry.Name) && !entry.FullName.Equals(generated, StringComparison.OrdinalIgnoreCase))
+                    pending.Push(entry.FullName);
+            }
     }
 }

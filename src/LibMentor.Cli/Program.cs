@@ -47,8 +47,13 @@ internal static class Command
             configPath = Path.GetFullPath(configPath);
             if (command == "init")
             {
-                var configuration = new Configuration { Name = "MyLibrary", Description = "Describe your library.",
-                    Version = "0.1.0", Repository = "https://github.com/owner/repository" };
+                var configuration = new Configuration
+                {
+                    Name = "MyLibrary",
+                    Description = "Describe your library.",
+                    Version = "0.1.0",
+                    Repository = "https://github.com/owner/repository"
+                };
                 using var stream = new FileStream(configPath, FileMode.CreateNew, FileAccess.Write);
                 await JsonSerializer.SerializeAsync(stream, configuration, ConfigurationFile.Json);
                 Console.WriteLine($"Created {configPath}");

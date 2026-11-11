@@ -10,8 +10,14 @@ namespace LibMentor.Tests;
 public sealed class DocumentationTests : IDisposable
 {
     private readonly string root = Path.Combine(Path.GetTempPath(), "LibMentor.Tests", Guid.NewGuid().ToString("N"));
-    private static Configuration Config => new() { Name = "Example", Description = "Example library.",
-        Version = "1.2.3", Repository = "https://github.com/example/library", Sources = ["src/**/*.cs"] };
+    private static Configuration Config => new()
+    {
+        Name = "Example",
+        Description = "Example library.",
+        Version = "1.2.3",
+        Repository = "https://github.com/example/library",
+        Sources = ["src/**/*.cs"]
+    };
 
     /// <summary>Creates an isolated repository fixture.</summary>
     public DocumentationTests() => Directory.CreateDirectory(root);

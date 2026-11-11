@@ -60,7 +60,10 @@ public sealed class KnowledgeValidator : IKnowledgeValidator
             }
             var start = new ProcessStartInfo("dotnet")
             {
-                WorkingDirectory = root, RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false
+                WorkingDirectory = root,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
             };
             foreach (var argument in new[] { "build", path, "--configuration", "Release", "--nologo", "--verbosity", "quiet", "-m:1", "-p:UseSharedCompilation=false" })
                 start.ArgumentList.Add(argument);

@@ -23,7 +23,7 @@ public sealed partial class PortableExporter : IKnowledgeExporter
         foreach (var entry in knowledge.Api)
         {
             api.AppendLine($"## `{entry.Id}`\n\n```text\n{entry.Signature}\n```\n\n{entry.Summary}\n");
-            api.AppendLine($"Source: [{entry.Path}:{entry.Line}]({SourceUrl(knowledge, entry.Path)}#L{entry.Line}) � Evidence: {entry.Evidence}\n");
+            api.AppendLine($"Source: [{entry.Path}:{entry.Line}]({SourceUrl(knowledge, entry.Path)}#L{entry.Line}) · Evidence: {entry.Evidence}\n");
         }
         var index = new StringBuilder($"# {knowledge.Name}\n\n> {knowledge.Description}\n\nVersion: {knowledge.Version}\n\n## Documentation\n\n");
         index.AppendLine($"- [API reference]({OutputUrl(configuration, "api.md")})\n- [Complete context]({OutputUrl(configuration, "llms-full.txt")})\n- [Machine-readable knowledge]({OutputUrl(configuration, "knowledge.json")})\n- [Agent skill]({OutputUrl(configuration, $"skills/{slug}/SKILL.md")})");
@@ -50,7 +50,7 @@ public sealed partial class PortableExporter : IKnowledgeExporter
         files[$"skills/{slug}/SKILL.md"] = skill;
         files[$"skills/{slug}/references/api.md"] = api.ToString();
         files[$"skills/{slug}/references/llms-full.txt"] = full.ToString();
-        files["index.html"] = $"<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>{System.Net.WebUtility.HtmlEncode(knowledge.Name)} AI documentation</title><h1>{System.Net.WebUtility.HtmlEncode(knowledge.Name)}</h1><p><a href=\"llms.txt\">Documentation index</a> � <a href=\"llms-full.txt\">Complete context</a> � <a href=\"api.md\">API reference</a></p></html>\n";
+        files["index.html"] = $"<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>{System.Net.WebUtility.HtmlEncode(knowledge.Name)} AI documentation</title><h1>{System.Net.WebUtility.HtmlEncode(knowledge.Name)}</h1><p><a href=\"llms.txt\">Documentation index</a> · <a href=\"llms-full.txt\">Complete context</a> · <a href=\"api.md\">API reference</a></p></html>\n";
         foreach (var file in files.ToArray())
             files[$"versions/{knowledge.Version}/{file.Key}"] = file.Value;
         if (configuration.BaseUrl is not null)
