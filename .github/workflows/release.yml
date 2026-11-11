@@ -6,6 +6,7 @@ on:
     paths:
       - Directory.Build.props
       - .github/workflows/release.yml
+      - scripts/verify-published-package.ps1
   workflow_dispatch:
     inputs:
       version:

@@ -26,7 +26,7 @@ The policy is already used for publication. Keep its repository, workflow and en
 
 1. Change the version in `Directory.Build.props` and `libmentor.json`.
 2. Run the CI checks locally or through a pull request.
-3. Merge the version change into `main`. Changes to `Directory.Build.props` automatically start the Release workflow. Updates to the release workflow itself also run the publication checks.
+3. Merge the version change into `main`. Changes to `Directory.Build.props` automatically start the Release workflow. Updates to the release workflow or public-package verification script also run the publication checks.
 
 Matching `v<version>` tags remain supported: `v0.1.1` publishes package `LibMentor` version `0.1.1`. All release runs are serialized, and existing NuGet versions are skipped rather than replaced.
 
@@ -42,7 +42,7 @@ The release workflow validates tag or manual versions when provided, allows auto
 
 A successful push means NuGet accepted the package upload. NuGet validates and indexes new packages before they become publicly restorable. If an exact-version restore reports that the new version is missing, check its validation/indexing status in the owner's Manage packages view. See [NuGet package validation and indexing](https://learn.microsoft.com/en-us/nuget/nuget-org/publish-a-package#package-validation-and-indexing).
 
-The final release step waits for public feed availability, then installs the exact package from an isolated nuget.org-only configuration and runs init, generation and drift checks. It allows up to 30 minutes for validation/indexing and fails explicitly if the package is still unavailable. The local package smoke test and the public-distribution test are separate checks.
+The final release step waits for the public version index and an actual successful installation of the exact package from nuget.org. It retries failed installations with a fresh tool directory and package cache within the same 30-minute deadline, because version-index and restore metadata can become available at different times. Once installation succeeds, it runs init, generation and drift checks. It fails explicitly if the package is still unavailable after the deadline. The local package smoke test and the public-distribution test are separate checks.
 
 The normal CI workflow tests Windows and Linux, checks formatting, packs and smoke-tests the actual tool. It then generates LibMentor's own documentation, verifies output drift and assembles the website.
 
