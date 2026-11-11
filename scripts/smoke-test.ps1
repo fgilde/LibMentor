@@ -24,3 +24,4 @@ try {
     & $executable invalid-command
     if ($LASTEXITCODE -ne 2) { throw 'Expected invalid-command exit code.' }
 } finally { Pop-Location }
+$global:LASTEXITCODE = 0
