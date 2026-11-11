@@ -2,9 +2,11 @@
 
 Checked on 2026-11-11.
 
-The public [fgilde/LibMentor](https://github.com/fgilde/LibMentor) repository contains the CLI, tests, workflows, JSON schemas and all six integration change sets. The first NuGet publication and production documentation deployment are still pending.
+The public [fgilde/LibMentor](https://github.com/fgilde/LibMentor) repository contains the CLI, tests, workflows, JSON schemas and all six integration change sets. NuGet accepted the first 0.1.0 upload through Trusted Publishing. Public feed availability and production documentation deployment are still pending.
 
 ## Verified on GitHub Actions
+
+- [First NuGet release](https://github.com/fgilde/LibMentor/actions/runs/43030959690): tests, packaging, installation, OIDC login and upload succeeded. NuGet returned HTTP 201 Created for LibMentor 0.1.0. At this checkpoint, its public version index still returns HTTP 404; consumer restores therefore remain pending validation/indexing.
 
 - [Windows and Linux CI](https://github.com/fgilde/LibMentor/actions/runs/43024680859): both jobs succeeded, with 32 passing tests per platform, whitespace checks, normal online package auditing, packaging, installation of the actual tool and CLI smoke tests.
 - [Six-library integration matrix](https://github.com/fgilde/LibMentor/actions/runs/43024681065): all six jobs succeeded using the CLI package built by that workflow. Each job generated documentation and then verified output drift without writing.
@@ -43,19 +45,20 @@ CI/CD includes cross-platform tests, real package smoke tests, six-library integ
 | BlazorJS | [#1](https://github.com/fgilde/BlazorJS/pull/1) | Draft; awaiting first NuGet release |
 | Playzor | [#1](https://github.com/fgilde/Playzor/pull/1) | Draft; awaiting first NuGet release |
 
-Each existing documentation deployment includes generated files under ai/. BlazorJS and Playzor have dedicated documentation deployment workflows. The consumers pin LibMentor 0.1.0; their own restore steps require its first NuGet publication. They remain drafts until the package is published and those workflows can be verified against NuGet itself.
+Each existing documentation deployment includes generated files under ai/. BlazorJS and Playzor have dedicated documentation deployment workflows. The consumers pin LibMentor 0.1.0; their own restore steps require its first NuGet publication. They remain drafts until the accepted package becomes publicly available and those workflows can be verified against NuGet itself. The first retry still failed at restore while version 0.1.0 was absent from the public feed.
 
 The main integration matrix already verifies the exact configurations against the built package, independently of public NuGet availability. All published commits have no Co-Authored-By trailer.
 
-## Remaining account setup
+## Remaining rollout
 
-1. Enable GitHub Pages with GitHub Actions as the source.
-2. Configure the fgilde NuGet Trusted Publishing policy for repository LibMentor, workflow release.yml, package scope LibMentor, with first-package and new-version publishing allowed. No environment is configured.
-3. Start the Release workflow with version 0.1.0, or push a matching version tag.
-4. After publication, rerun consumer validation, complete the pull requests and verify their deployed AI-documentation URLs.
-5. Optionally supply a Context7 API key and register the public llms.txt URLs after deployment.
+The existing NuGet Trusted Publishing policy was verified by the successful OIDC exchange; account setup for that release is complete.
 
-See [release setup](releasing.md) for exact commands and policy values.
+1. Wait for public NuGet validation/indexing of 0.1.0. If validation reports an error, inspect the package in the owner's Manage packages view.
+2. Rerun consumer validation against NuGet itself, complete the pull requests and verify their deployed AI-documentation URLs.
+3. Enable GitHub Pages with GitHub Actions as the source where required. The LibMentor documentation build succeeds, but its deployment still returns HTTP 404 until Pages is enabled.
+4. Optionally supply a Context7 API key and register the public llms.txt URLs after deployment.
+
+Future version changes on main, matching version tags and validated manual runs all use release.yml. See [release setup](releasing.md) for the exact commands and policy values.
 
 ## Local checkout and history
 

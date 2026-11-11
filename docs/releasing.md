@@ -40,6 +40,8 @@ Configure the NuGet Trusted Publishing policy before starting the release. Manua
 
 The release workflow validates tag or manual versions when provided, allows automatic publication only from main, runs tests, packs and installs the actual package, exercises the CLI, then exchanges OIDC credentials and publishes. Do not tag again to replace a package; NuGet versions are immutable.
 
+A successful push means NuGet accepted the package upload. NuGet validates and indexes new packages before they become publicly restorable. If an exact-version restore reports that the new version is missing, check its validation/indexing status in the owner's Manage packages view. See [NuGet package validation and indexing](https://learn.microsoft.com/en-us/nuget/nuget-org/publish-a-package#package-validation-and-indexing).
+
 The normal CI workflow tests Windows and Linux, checks formatting, packs and smoke-tests the actual tool. Documentation deployment uses the CLI from the same source checkout.
 
 ## Optional Context7 registration
