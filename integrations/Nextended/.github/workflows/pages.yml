@@ -1,0 +1,81 @@
+name: Deploy documentation to GitHub Pages
+
+# The site is VitePress (docs/), not Jekyll. Two locales live in one build:
+#   docs/     -> https://fgilde.github.io/Nextended/
+#   docs/de/  -> https://fgilde.github.io/Nextended/de/
+#
+# The build fails on a dead internal link (ignoreDeadLinks is off in the config), so a broken
+# cross-reference is caught here rather than shipped as a 404.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'Nextended.*/**'
+      - 'Version.props'
+      - 'README.md'
+      - 'libmentor.json'
+      - '.config/dotnet-tools.json'
+      - '.github/actions/libmentor/**'
+      - '.github/scripts/libmentor-version.py'
+      - 'icon.png'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # lastUpdated in the theme reads git history; a shallow clone would date every page
+          # to the last commit instead of the one that actually changed it.
+          fetch-depth: 0
+
+      # Node 24 ships npm 11, which is what writes the committed lockfile. The npm 10 that
+      # comes with Node 22 rejects that lockfile under `npm ci`, because search-insights is
+      # only an optional peer of the search component and has no entry of its own.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: docs/package-lock.json
+
+      - name: Install
+        working-directory: docs
+        run: npm ci
+
+      - name: Build
+        working-directory: docs
+        run: npm run build
+
+      - uses: ./.github/actions/libmentor
+
+      - name: Include AI documentation
+        run: cp -R .libmentor docs/.vitepress/dist/ai
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/.vitepress/dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

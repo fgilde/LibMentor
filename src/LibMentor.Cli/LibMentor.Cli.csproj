@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>libmentor</ToolCommandName>
+    <PackageId>LibMentor</PackageId>
+    <IsPackable>true</IsPackable>
+    <Description>Generate versioned AI documentation, API references and agent skills from your libraries.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>llms;documentation;agents;skills;roslyn;context7</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../LibMentor.Infrastructure/LibMentor.Infrastructure.csproj" />
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>

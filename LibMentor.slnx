@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LibMentor.Core/LibMentor.Core.csproj" />
+    <Project Path="src/LibMentor.Application/LibMentor.Application.csproj" />
+    <Project Path="src/LibMentor.Infrastructure/LibMentor.Infrastructure.csproj" />
+    <Project Path="src/LibMentor.Cli/LibMentor.Cli.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LibMentor.Tests/LibMentor.Tests.csproj" />
+  </Folder>
+</Solution>

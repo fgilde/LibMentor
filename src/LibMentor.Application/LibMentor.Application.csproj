@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup><ProjectReference Include="../LibMentor.Core/LibMentor.Core.csproj" /></ItemGroup>
+</Project>

@@ -1,0 +1,47 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Verify tag version
+        shell: pwsh
+        run: |
+          [xml]$props = Get-Content Directory.Build.props
+          $version = $props.Project.PropertyGroup.Version
+          if ($env:GITHUB_REF_NAME -cne "v$version") { throw 'Tag and project version differ.' }
+          $config = Get-Content libmentor.json | ConvertFrom-Json
+          if ($config.version -cne $version) { throw 'Documentation and package version differ.' }
+      - run: dotnet test -c Release --logger trx
+      - run: dotnet pack src/LibMentor.Cli -c Release -o artifacts
+      - name: Smoke test package
+        shell: pwsh
+        run: ./scripts/smoke-test.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nuget
+          path: artifacts/*.nupkg
+      - uses: NuGet/login@v1
+        id: nuget
+        with:
+          user: fgilde
+      - name: Publish
+        env:
+          NUGET_API_KEY: ${{ steps.nuget.outputs.NUGET_API_KEY }}
+        shell: pwsh
+        run: |
+          Get-ChildItem artifacts/*.nupkg | ForEach-Object {
+            dotnet nuget push $_.FullName --api-key $env:NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
+            if ($LASTEXITCODE) { throw 'NuGet push failed.' }
+          }

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LibMentor knowledge v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "name", "description", "version", "repository", "revision", "packages", "documents", "api"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "name": {"type": "string"},
+    "description": {"type": "string"},
+    "version": {"type": "string"},
+    "repository": {"type": "string"},
+    "revision": {"type": "string"},
+    "packages": {"type": "array", "items": {"type": "string"}},
+    "documents": {"type": "array", "items": {"$ref": "#/$defs/document"}},
+    "api": {"type": "array", "items": {"$ref": "#/$defs/api"}}
+  },
+  "$defs": {
+    "document": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "title", "content", "sha256"],
+      "properties": {"path": {"type": "string"}, "title": {"type": "string"}, "content": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+    },
+    "api": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "signature", "summary", "path", "line", "evidence"],
+      "properties": {"id": {"type": "string"}, "signature": {"type": "string"}, "summary": {"type": "string"}, "path": {"type": "string"}, "line": {"type": "integer", "minimum": 1}, "evidence": {"enum": ["source-declaration", "compiler-xml", "typedoc"]}}
+    }
+  }
+}

@@ -1,0 +1,66 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'MudBlazor.Extensions/**/*.cs'
+      - 'MudBlazor.Extensions.CodeGator.Adapter/**'
+      - 'MudBlazor.Extensions/MudBlazor.Extensions.csproj'
+      - 'README.md'
+      - 'libmentor.json'
+      - '.config/dotnet-tools.json'
+      - '.github/actions/libmentor/**'
+      - '.github/scripts/libmentor-version.py'
+      - 'mkdocs.yml'
+      - 'requirements.txt'
+      - 'MudBlazor.Extensions/Docs/**'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for proper git info
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Build documentation
+        run: mkdocs build --clean --verbose
+
+      - uses: ./.github/actions/libmentor
+
+      - name: Include AI documentation
+        run: cp -R .libmentor site/ai
+
+      - name: Deploy to GitHub Pages
+        run: ghp-import -n -p -f site

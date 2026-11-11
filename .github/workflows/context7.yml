@@ -1,0 +1,19 @@
+name: Register Context7
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit deployed documentation
+        env:
+          CONTEXT7_API_KEY: ${{ secrets.CONTEXT7_API_KEY }}
+        run: |
+          test -n "$CONTEXT7_API_KEY"
+          curl --fail --silent --show-error https://fgilde.github.io/LibMentor/llms.txt --output /dev/null
+          curl --fail --silent --show-error https://context7.com/api/v2/add/llmstxt \
+            --header "Authorization: Bearer $CONTEXT7_API_KEY" \
+            --header 'Content-Type: application/json' \
+            --data '{"llmstxtUrl":"https://fgilde.github.io/LibMentor/llms.txt"}'

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "name": "LibMentor",
+  "description": "Generate versioned AI documentation and agent skills for libraries.",
+  "version": "0.1.0",
+  "repository": "https://github.com/fgilde/LibMentor",
+  "revision": "main",
+  "baseUrl": "https://fgilde.github.io/LibMentor",
+  "output": ".libmentor",
+  "documents": ["README.md", "docs/**/*.md"],
+  "sources": ["src/**/*.cs"],
+  "exclude": [],
+  "examples": ["examples/ExampleLibrary/ExampleLibrary.csproj"],
+  "packages": ["LibMentor"],
+  "guidance": ["Keep extraction evidence and source provenance when adding exporters."]
+}
