@@ -20,6 +20,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 35
     permissions:
       contents: read
       id-token: write
@@ -68,3 +69,6 @@ jobs:
             dotnet nuget push $_.FullName --api-key $env:NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
             if ($LASTEXITCODE) { throw 'NuGet push failed.' }
           }
+      - name: Verify public package
+        shell: pwsh
+        run: ./scripts/verify-published-package.ps1

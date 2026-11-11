@@ -42,6 +42,8 @@ The release workflow validates tag or manual versions when provided, allows auto
 
 A successful push means NuGet accepted the package upload. NuGet validates and indexes new packages before they become publicly restorable. If an exact-version restore reports that the new version is missing, check its validation/indexing status in the owner's Manage packages view. See [NuGet package validation and indexing](https://learn.microsoft.com/en-us/nuget/nuget-org/publish-a-package#package-validation-and-indexing).
 
+The final release step waits for public feed availability, then installs the exact package from an isolated nuget.org-only configuration and runs init, generation and drift checks. It allows up to 30 minutes for validation/indexing and fails explicitly if the package is still unavailable. The local package smoke test and the public-distribution test are separate checks.
+
 The normal CI workflow tests Windows and Linux, checks formatting, packs and smoke-tests the actual tool. Documentation deployment uses the CLI from the same source checkout.
 
 ## Optional Context7 registration
